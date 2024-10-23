@@ -2,7 +2,9 @@
 
 const PlaceOrder = () => {
   return (
-    <div>PlaceOrder</div>
+    <section>
+      
+    </section>
   )
 }
 

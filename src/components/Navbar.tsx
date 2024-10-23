@@ -6,8 +6,15 @@ import CloseMenuIcon from "../assets/frontend_assets/cross_icon.png";
 import SearchIcon from "../assets/frontend_assets/search_icon.png";
 import ProfileIcon from "../assets/frontend_assets/profile_icon.png";
 import CartIcon from "../assets/frontend_assets/cart_icon.png";
+import { useDispatch, useSelector } from "react-redux";
+import { setSearch, setShowSearch } from "../store/shopSlice";
+import { RootState } from "../store";
+
 
 const Navbar = () => {
+  const dispatch = useDispatch()
+  const showSearch = useSelector((state: RootState) => state.shop.showSearch)
+  const cartItems = useSelector((state: RootState) => state.shop.cartItems)
   const [isVisibleNav, setIsVisibleNav] = useState<boolean>(true);
   const [isOpenMobileNav, setIsOpenMobileNav] = useState<boolean>(false);
   const lastScrollY = useRef(0)
@@ -16,6 +23,12 @@ const Navbar = () => {
   const handleClickMobileNav = () => {
     setIsOpenMobileNav(!isOpenMobileNav);
   };
+
+  const handleClickSearchIcon = () => {
+    dispatch(setShowSearch(!showSearch))
+    dispatch(setSearch(''))
+  }
+
 
   useEffect(() => {
     setIsOpenMobileNav(false);
@@ -81,7 +94,7 @@ const Navbar = () => {
           </ul>
         </nav>
         <div className="flex items-center justify-between gap-4">
-          <Link to="/collection" className="p-2">
+          <Link to="/collection" className="p-2" onClick={handleClickSearchIcon}>
             <img src={SearchIcon} alt="search icon" className="w-5" />
           </Link>
           <Link to="/login" className="p-2">
@@ -90,7 +103,7 @@ const Navbar = () => {
           <Link to="/cart" className="relative p-2">
             <img src={CartIcon} alt="cart icon" className="w-5" />
             <span className="absolute bottom-0 right-[1px] aspect-square w-4 rounded-full bg-black text-center text-[8px] leading-4 text-white">
-              0
+              {cartItems.length}
             </span>
           </Link>
           <button

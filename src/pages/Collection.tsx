@@ -12,7 +12,8 @@ const Collection = () => {
   const [selectedType, setSelectedType] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState<string>("relevant");
   const products = useSelector((state: RootState) => state.shop.products);
-
+  const searchText = useSelector((state: RootState) => state.shop.search)
+ 
   const handleToggleFilter = () => {
     setIsOpenFilter(!isOpenFilter);
   };
@@ -51,6 +52,12 @@ const Collection = () => {
       );
     }
 
+    if(searchText) {
+      updatedProducts = updatedProducts.filter((product) => {
+        return product.name.toLowerCase().includes(searchText.trim().toLowerCase())
+      })
+    }
+
     switch (sortOption) {
       case "low-high":
         updatedProducts = [...updatedProducts].sort((a, b) => a.price - b.price);
@@ -61,7 +68,7 @@ const Collection = () => {
     }
 
     setFilterProducts(updatedProducts);
-  }, [products, selectedCategories, selectedType, sortOption]);
+  }, [products, selectedCategories, selectedType, sortOption, searchText]);
   return (
     <section className="mt-10 flex flex-col gap-1 md:flex-row md:gap-10">
       {/* LEFT SIDE */}
@@ -172,16 +179,20 @@ const Collection = () => {
           </select>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 gap-y-6 md:grid-cols-3 lg:grid-cols-4">
-          {filterProducts.map((product) => (
-            <ProductItem
-            key={product._id}
-              id={product._id}
-              name={product.name}
-              img={product.image[0]}
-              price={product.price}
-            />
-          ))}
+        
+        <div className={`${filterProducts.length !== 0 ? "grid grid-cols-2 gap-4 gap-y-6 md:grid-cols-3 lg:grid-cols-4" : "flex items-center justify-center"}`}>
+          {filterProducts.length === 0 ? <h2 className="text-2xl my-40">No Product Found</h2> : (
+            filterProducts.map((product) => (
+              <ProductItem
+                key={product._id}
+                id={product._id}
+                name={product.name}
+                img={product.image[0]}
+                price={product.price}
+              />
+            ))
+          )}
+          
         </div>
       </div>
     </section>

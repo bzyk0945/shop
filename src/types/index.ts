@@ -10,3 +10,10 @@ export interface Product {
     date: number;
     bestseller: boolean;
   }
+
+  export interface CartItem {
+    product: Product
+    quantity: number,
+    size:string,
+   
+  }
